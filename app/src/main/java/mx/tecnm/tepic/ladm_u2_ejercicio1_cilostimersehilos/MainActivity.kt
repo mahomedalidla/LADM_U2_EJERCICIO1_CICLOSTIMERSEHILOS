@@ -7,6 +7,9 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
     var contador = 1
+
+    //Dividimos tiempo totla entre lapso
+    //Ciclop en segundo plano
     val timer = object : CountDownTimer(20000,200){ //20000/200=100
         override fun onTick(p0: Long) {
             //SE EJECUTA CUANDO EL INTERVALO SE HACE 0
@@ -34,6 +37,34 @@ class MainActivity : AppCompatActivity() {
 
         btnt.setOnClickListener {
             timer.start()
+        }
+
+        btnH.setOnClickListener {
+            val h = Hilo(this)
+            h.start()//Pongo a ejecutar en segundo plano
+        }
+    }
+}
+
+//los dos puntos son Herencia
+class Hilo(p:MainActivity) : Thread() {
+    var contador = 1
+    val puntero = p
+
+    override fun run(){
+        super.run()
+        //Aqui va el copdigo que se ejecutara en segundo plano
+        //El run por naturaleza se ejecuta una sola vez
+
+        //ciclo infinito para que siempre est funcionando
+        while (true){
+            //permisos para camabiar itnerfaz grafica
+            puntero.runOnUiThread {
+                //pones linea de codigo que cambie en interfaz grafico
+                puntero.txtH.text="Valor Hilo ${contador}"
+            }
+            contador++
+            sleep(100)
         }
     }
 }
